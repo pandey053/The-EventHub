@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Ticket</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .block{
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .form3 {
+        width: 85% !important;
+        padding: 20px;
+      }
+
+      .svgs {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+        gap: 12px;
+      }
+      .block{
+        padding-top: 5px;
+      }
+    }
+    </style>
+</head>
+<body>
+     <div class="main3">
+        <div class="form4">
+            <h3 class="heading4">Book Ticket</h3>
+            <form action="/book/<%= id %>" method="post">
+                
+                <div class="block">
+                    <label for="username">Username: </label>
+                <input type="text" id="username" name="username" style="outline: none;" value="<%= username %>"  readonly>
+                </div>
+
+                <div class="block">
+                    <label for="id">Event Id: </label>
+                <input type="text" id="id" name="id" style="outline: none;"  value="<%= id %>" readonly>
+                </div>
+
+                <div class="block">
+                    <label for="contact">Enter Contact Number: </label>
+                <input type="text" id="contact" name="contact" style="outline: none;" required>
+                </div>
+
+                <div class="block">
+                    <label for="tickets">Enter Number of Tickets: </label>
+                <input type="number" id="tickets" name="tickets" style="outline: none;" min="1" required>
+                </div>
+
+                <div class="block">
+                    <button class="btn b" type="submit">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

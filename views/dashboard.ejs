@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div>
+        <h1 class="dash-title">Admin Dashboard</h1>
+        <div class="dash-cards">
+            <div class="card a">Total Events: <%= data.totalEvents %></div>
+            <div class="card b">Upcoming Events: <%= data.upcomingEvents %></div>
+            <div class="card c">Total Users: <%= data.totalUsers %></div>
+            <div class="card d">Total Bookings: <%= data.totalBookings %></div>
+        </div>
+
+        <h2 class="e">Recent Events</h2>
+        <table class="dash-table">
+            <thead>
+                <tr>
+                    <td>Event</td>
+                    <td>Date</td>
+                    <td>Location</td>
+                    <td>Price</td>
+                </tr>
+            </thead>
+            <tbody>
+               <% for(event of recentEvents){ %>
+                    <tr>
+                        <td><%= event.name %></td>
+                        <td><%= event.date.toISOString().split('T')[0] %></td>
+                        <td><%= event.location %></td>
+                        <td><%= event.price %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <h2 class="title">Bookings Per Completed Event</h2>
+        <canvas class="mychart" id="piechart" width="400" height="400"></canvas>
+    </div>
+
+</body>
+<footer>
+    <p>© 2025 The EventHub | All rights reserved.</p>
+</footer>
+
+<!-- <br><br>
+<footer style="text-align: center; padding: 20px; color: gray;">
+  &copy; <%= new Date().getFullYear() %> The EventHub. All rights reserved.
+</footer> -->
+
+<script>
+  const chartpie = document.getElementById('piechart').getContext('2d');
+
+  const labels = <%- JSON.stringify((chartData || []).map(e => e.eventName)) %>  ;
+  const data =  <%- JSON.stringify((chartData || []).map(e => e.bookingCount)) %> ;
+
+  const bookingPiechart = new Chart(chartpie, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Bookings',
+        data: data,
+        backgroundColor: [
+          // '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+          // '#FF9F40', '#00C49F', '#C70039', '#B0E57C', '#F08080'
+          '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
+        '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+</html>

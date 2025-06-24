@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment | The EventHub</title>
+  <link rel="stylesheet" href="/styles/payment.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .details {
+      margin: 20px 0;
+      font-size: 1rem;
+    }
+    .details span {
+      font-weight: bold;
+      color: #555;
+    }
+    .pay-btn {
+      display: block;
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .pay-btn:hover {
+      background: #0056b3;
+    }
+    .back{
+        display: flex;
+        justify-content: center;
+    }
+    .btn
+    {
+        background: transparent;
+        border: 1px solid black;
+        height: 32px;
+        border-radius: 0.5rem;
+        font-size : 15px;
+    }
+    .btn:hover{
+        background-color: black;
+        color: white;
+        transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Complete Your Payment</h2>
+    <div class="details">
+      <p><span>User:</span> <%= user.username %></p>
+      <p><span>Order ID:</span> <%= orderId %></p>
+      <p><span>Amount:</span> ₹<%= (amount / 100).toFixed(2) %></p>
+    </div>
+    <form id="payment-form">
+      <button type="button" class="pay-btn" id="rzp-button">Pay Now</button>
+    </form><br>
+    <div class="back">
+        <button class="btn" onclick="window.location.href='<%= user.role === 'admin' ? '/admin' : '/user' %>'">
+    Back to Dashboard
+    </button>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    const options = {
+      key: "<%= keyId %>",
+      amount: "<%= amount %>",
+      currency: "INR",
+      name: "The EventHub",
+      description: "Ticket Payment",
+      order_id: "<%= orderId %>",
+      handler: function (response) {
+        // Optionally send payment verification data to server
+        window.location.href = "/success";
+      },
+      prefill: {
+        name: "<%= user.username %>",
+        email: "", // You can pass email if stored
+      },
+      theme: {
+        color: "#007bff",
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    document.getElementById("rzp-button").onclick = function (e) {
+      rzp.open();
+      e.preventDefault();
+    };
+  </script>
+</body>
+</html>

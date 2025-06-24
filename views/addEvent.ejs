@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add an Event</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    .block{
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .form3 {
+        width: 85% !important;
+        padding: 20px;
+      }
+
+      .svgs {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+        gap: 12px;
+      }
+      .block{
+        padding-top: 5px;
+      }
+    }
+</style>
+<body>
+    <div class="main1">
+        <div class="form1">
+            <h3 class="a">Add an Event</h3><br><br> 
+
+            <form action="http://localhost:5000/add" method="POST" autocomplete="off">
+                
+                <div class="block">
+                    <label for="eventName">Event Name:</label>
+                    <input type="text" id="eventName" name="name" style="outline: none;" required>
+                </div>
+
+                <div class="block">
+                    <label for="date">Date: </label>
+                <input type="date" id="date" name="date" style="outline: none;" required>
+                </div>
+
+               <div class="block">
+                     <label for="location">Location: </label>
+                <input type="text" id="location" name="location" style="outline: none;" required>
+               </div>
+
+                <div class="block">
+                    <label for="price">Price: </label>
+                <input type="number" id="price" name="price" style="outline: none;" required>
+                </div>
+
+                <div class="block">
+                    <label for="capacity">Capacity: </label>
+                <input type="number" id="capacity" name="capacity" style="outline: none;" required>
+                </div>
+
+                <div class="block">
+                    <button type="submit" class="btn b">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Events</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    .block{
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .form3 {
+        width: 85% !important;
+        padding: 20px;
+      }
+
+      .svgs {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+        gap: 12px;
+      }
+      .block{
+        padding-top: 5px;
+      }
+    }
+</style>
+<body>
+    <div class="main2">
+        <div class="form2">
+            <h3 class="aa">Delete an Event</h3><br><br> 
+
+            <form action="/delete" method="POST" autocomplete="off">
+                
+                <div class="block">
+                    <label for="eventId">Select Event to Delete:</label>
+                    <select name="eventId" id="eventId" class="event-select" required>
+                        <% for(e of events){ %>
+                        <option value="<%= e.id %>"><%= e.name %> - <%= e.date.toISOString().split('T')[0] %></option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <div class="block">
+                    <button type="submit" class="btn b">Delete Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

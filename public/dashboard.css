@@ -1,0 +1,86 @@
+body{
+    background-color: whitesmoke;
+    margin: 0;
+    padding: 0;
+}
+.dash-title{
+    color: #2c3e50;
+    font-weight: 220;
+    text-align: center;
+}
+.dash-cards {
+    display: flex;
+    gap: 20px;
+    margin: 30px;
+    justify-content: center;
+}
+
+.card {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+thead{
+    background-color: #008080d5 ;
+    color: white;
+}
+.dash-table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    border: 1px solid white;
+}
+
+.dash-table th, .dash-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.dash-table tbody tr:nth-child(even) {
+    background-color: #cdecf0;
+}
+.dash-table tbody tr:nth-child(odd) {
+    background-color: white;
+}
+.a{
+    background-color: #FFF8DC;
+}
+.b{
+    background-color: #E6FFEA;
+}
+.c{
+    background-color: #FFE5E5;
+}
+.d{
+    background-color: #E6F0FF;
+}
+.e{
+    font-weight: 200;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.title{
+    text-align: center;
+    font-size: 24px;
+    font-weight: 220;
+}
+.mychart{
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 0 auto;
+}
+footer {
+    background-color: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}

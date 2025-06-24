@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    .block{
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+     @media (max-width: 600px) {
+      .form4 {
+        width: 85% !important;
+        padding: 20px;
+      }
+      .block{
+        padding-top: 5px;
+      }
+    }
+</style>
+<body>
+     <div class="main3">
+        <div class="form4">
+            <h3 class="heading4">Register to The EventHub</h3>
+            <p class="c">Already have an account? <a href="http://localhost:5000/login">Log in</a></p><br>
+            <form action="http://localhost:5000/signup" method="post">
+                
+               <div class="block">
+                    <label for="username">Enter Username: </label>
+                    <input type="text" id="username" name="username" style="outline: none;"  required>
+               </div>
+
+                <div class="block">
+                    <label for="email">Enter Email: </label>
+                <input type="text" id="email" name="email" style="outline: none;"  required>
+                </div>
+
+                <div class="block">
+                    <label for="password">Enter Password: </label>
+                <input type="password" id="password" name="password" style="outline: none;" required>
+                </div>
+
+                <div class="block">
+                    <label for="role">Select Role:</label>
+                    <select id="role" name="role" style="outline: none; border: none; border-bottom: 1px solid black;"  required>
+                        <option value="" disabled selected></option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+
+                <div class="block">
+                    <button class="btn b">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

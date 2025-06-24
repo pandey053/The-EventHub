@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events</title>
+    <script src="/script.js"></script>
+</head>
+<style>
+    
+    html, body{
+        background-color: whitesmoke;
+        font-family: "Inter", sans-serif;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* font-size: 15px; */
+    }
+    .header{
+        width: 100%;
+        height: 60px;
+        background-color: white;
+        background-color: #FFFADC;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .scrolled{
+        transition: color 0.3s ease;
+        background-color: white ;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .name{
+        width: 50%;
+        font-weight: 220;
+        /* color: #2c3e50; */
+        color: black;
+        margin-left: 120px;
+    }
+    .btns{
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .btn{
+        margin-right: 20px;
+        background: transparent;
+        border: none;
+        height: 32px;
+        border-radius: 0.5rem;
+        font-size : 15px;
+        transition: all 0.3s ease;
+        width: 180px;
+    }
+    .home, .lg{
+        width: 100px;
+    }
+    .btn:hover{
+        background-color: black;
+        color: white;
+    }
+    .event_box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 30px;
+        justify-content: center;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        width: 280px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        text-align: center;
+        font-size: 15px;
+        /* font-family: "Inter", sans-serif; */
+    }
+
+    .card h3 {
+        margin-bottom: 10px;
+    }
+
+    .book {
+        background-color: #007BFF;
+        /* background-color: #273F4F; */
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .book:hover{
+        background-color:#516c7e ;
+    }
+    footer {
+        background-color: #222;
+        color: #ccc;
+        text-align: center;
+        padding: 20px;
+        margin-top: 20px;
+}
+
+</style>
+<body>
+    <div class="header">
+        <h2 class="name">Upcoming Events</h2>
+        <div class="btns">
+            <button class="btn home" onclick="window.location.href='/'">Home</button>
+            <button class="btn " onclick="window.location.href='/admin'">Back to Dashboard</button>
+            <button class="btn lg" onclick="window.location.href='/Logout'">Log out</button>
+        </div>
+    </div>
+
+    <div class="event_box">
+        <% if(events.length == 0) { %>
+           <p style:"text-align: center;"> No Upcoming Events Available</p>
+        <% } %>
+
+        <% for(event of events) { %>
+           <div class="card">
+                <h3><%=event.name %></h3><br>
+                <p>Date: <%= event.date.toISOString().split('T')[0] %></p>
+                <p>Location: <%= event.location %></p><br>
+                <p>Price: <%= event.price %></p><br>
+                <button class="book" onclick="window.location.href='/book/<%=event.id%>'">Book Now</button>
+           </div>
+        <% } %>
+    </div>
+    <footer>
+    <p>© 2025 The EventHub | All rights reserved.</p>
+</footer>
+</body>
+</html>
