@@ -94,9 +94,9 @@
       description: "Ticket Payment",
       order_id: "<%= orderId %>",
 
-      
+
       handler: function (response) {
-        fetch("/payment-verification", {
+        fetch("/verify", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
