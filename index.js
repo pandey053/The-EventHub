@@ -388,7 +388,7 @@ app.get('/update', authMiddleware, (req, res) => {
                     if (err3) return res.status(500).send("Booking insert failed");
 
                     delete req.session.pendingBooking;
-                    res.redirect('/confirmation');
+                    res.render('confirmation');
             });
         })
     }) 
