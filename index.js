@@ -27,13 +27,14 @@ app.use(session({
   }     
 }));
 // console.log("Session Secret:", process.env.SESSION_SECRET);
-const secret_jwt = 'Adarsh&2004&'
-const port = 5000 ;
+const secret_jwt = process.env.SECRET_JWT;
+const port = process.env.PORT || 5000;
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Adarsh&2004&',
-    database: 'event_db',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 }) ;
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
