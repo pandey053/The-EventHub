@@ -29,6 +29,7 @@ app.use(session({
 // console.log("Session Secret:", process.env.SESSION_SECRET);
 const secret_jwt = process.env.SECRET_JWT;
 const port = process.env.PORT || 5000;
+
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
