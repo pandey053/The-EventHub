@@ -93,9 +93,27 @@
       name: "The EventHub",
       description: "Ticket Payment",
       order_id: "<%= orderId %>",
+
+      
       handler: function (response) {
-        // Optionally send payment verification data to server
-        window.location.href = "/success";
+        fetch("/payment-verification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(response),
+        })
+        .then((res) => {
+          if (res.ok) {
+            window.location.href = "/success";
+          } else {
+            alert("Payment verification failed. Please contact support.");
+          }
+        })
+        .catch((err) => {
+          console.error("Verification error:", err);
+          alert("Something went wrong. Try again later.");
+        });
       },
       prefill: {
         name: "<%= user.username %>",

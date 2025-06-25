@@ -370,6 +370,30 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
     });
 });
 
+
+const crypto = require("crypto");
+
+app.post("/payment-verification", async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
+
+    if (expectedSignature === razorpay_signature) {
+      return res.redirect("/success"); // or render a success page
+    } else {
+      return res.status(400).send("Invalid signature. Payment not verified.");
+    }
+  } catch (error) {
+    console.error("Payment verification failed:", error);
+    res.status(500).send("Internal Server Error during verification.");
+  }
+});
+
 app.get('/update', authMiddleware, (req, res) => {
     const booking = req.session.pendingBooking;
 
@@ -388,11 +412,13 @@ app.get('/update', authMiddleware, (req, res) => {
                     if (err3) return res.status(500).send("Booking insert failed");
 
                     delete req.session.pendingBooking;
-                    res.redirect('/confirmation');
+                    res.render('confirmation');
             });
         })
     }) 
 })
+
+
 
 app.get('/contact', (req, res) => {
   res.render('contact');
