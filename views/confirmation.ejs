@@ -52,9 +52,10 @@
             <i class="fas fa-check-circle"></i>
         </div>
         <h2>Booking Confirmed!</h2>
-        <p>Event: <%= eventName %></p>
-        <p>Date: <%= eventDate.toISOString().split('T')[0] %></p>
-        <p>Location: <%= location %></p>
+        <p>Event: <%= event.name %></p>
+        <p>Date: <%= event.date.toISOString().split('T')[0] %></p>
+        <p>Location: <%= event.location %></p>
+        <p>User Id: <%= userId %></p>
         <p>Number of Tickets: <%= tickets %></p>
         <button class="btn" onclick="window.location.href='/user'">Back to Dashboard</button></a>
     </div>

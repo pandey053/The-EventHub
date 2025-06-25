@@ -373,26 +373,20 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
 
 const crypto = require("crypto");
 
-app.post("/payment-verification", async (req, res) => {
-  try {
+app.post("/verify", express.json(), (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-    const sign = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(sign.toString())
-      .digest("hex");
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+    const generated_signature = hmac.digest("hex");
 
-    if (expectedSignature === razorpay_signature) {
-      return res.redirect("/success"); // or render a success page
+    if (generated_signature === razorpay_signature) {
+        res.redirect("/success");
     } else {
-      return res.status(400).send("Invalid signature. Payment not verified.");
+        res.status(400).send("Payment verification failed");
     }
-  } catch (error) {
-    console.error("Payment verification failed:", error);
-    res.status(500).send("Internal Server Error during verification.");
-  }
 });
+
 
 app.get('/update', authMiddleware, (req, res) => {
     const booking = req.session.pendingBooking;
@@ -412,7 +406,11 @@ app.get('/update', authMiddleware, (req, res) => {
                     if (err3) return res.status(500).send("Booking insert failed");
 
                     delete req.session.pendingBooking;
-                    res.render('confirmation');
+                    
+                    db.query(`SELECT * FROM events WHERE id = ?`, [eventId], (err4, result) => {
+                        if (err4) return res.status(500).send("Event fetch failed");
+                        res.render('confirmation', {event: result[0], userId, tickets});
+                })
             });
         })
     }) 
