@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upcoming Events</title>
     <script src="/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <style>
     
@@ -101,12 +103,93 @@
     .book:hover{
         background-color:#516c7e ;
     }
-    footer {
-        background-color: #222;
-        color: #ccc;
-        text-align: center;
-        padding: 20px;
-        margin-top: 20px;
+    .footer {
+  background-color: #222;
+  color: #ddd;
+  padding: 40px 20px 10px;
+  font-size: 14px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+}
+
+.footer-section h3 {
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.footer .icons a {
+  color: #ccc;
+  font-size: 18px;
+  margin-right: 12px;
+  text-decoration: none;
+}
+
+.footer .icons a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 15px;
+  font-size: 13px;
+}
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.icon-circle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #444;
+  color: #fff;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.icon-circle:hover {
+  background-color: #fff;
+  color: #222;
+  transform: scale(1.1);
 }
 
 </style>
@@ -135,8 +218,47 @@
            </div>
         <% } %>
     </div>
-    <footer>
+    <footer class="footer">
+  <div class="footer-container">
+    
+    <!-- Social Media Section -->
+    <div class="footer-section social-media">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/_adarsh.pandey_11?igsh=cGRuOWx2dnluajcw" class="icon-circle"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/adarsh-pandey-1a4864324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="icon-circle"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://github.com/pandey053" class="icon-circle"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/adminevents">Events</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Sign Up</a></li>
+      </ul>
+    </div>
+
+    <!-- Help & Support -->
+    <div class="footer-section help">
+      <h3>Help & Support</h3>
+      <ul>
+        <li><a href="/faqs">FAQs</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+        <li><a href="/terms">Terms & Conditions</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Bottom Text -->
+  <div class="footer-bottom">
     <p>© 2025 The EventHub | All rights reserved.</p>
+  </div>
 </footer>
+
 </body>
 </html>

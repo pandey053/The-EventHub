@@ -29,6 +29,7 @@ app.use(session({
 // console.log("Session Secret:", process.env.SESSION_SECRET);
 const secret_jwt = process.env.SECRET_JWT;
 const port = process.env.PORT || 5000;
+const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -73,8 +74,11 @@ app.get('/signup', (req, res) => {
 })
 
 app.post('/signup', async (req, res) => {
-    const {username, email, password, role} = req.body ;
+    const {username, email, password, role, secretCode} = req.body ;
 
+    if (role === 'admin' && secretCode !== ADMIN_SECRET_CODE) {
+    return res.render('signup', { error: 'Invalid admin secret code' });
+  }
     console.log('Signup Receieved', req.body) ;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -153,6 +157,23 @@ function authMiddleware(req, res, next) {
     }
 }
 
+function isAdmin(req, res, next) {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    return res.status(403).send('Access denied. Admins only.');
+  }
+}
+
+function isUser(req, res, next) {
+  if (req.user && req.user.role === 'user') {
+    next();
+  } else {
+    return res.status(403).send('Access denied. Users only.');
+  }
+}
+
+module.exports = { isAdmin, isUser };
 
 app.get('/logout', (req, res) => {
 
@@ -166,14 +187,18 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.get("/user", authMiddleware, (req, res) => {
+app.get("/user", authMiddleware, isUser, (req, res) => {
     db.query('SELECT * from events ORDER BY date ASC', (err, results) => {
-        if(err) return res.status(500).send('Database Error') ;
+        if(err) 
+        {
+            console.log(err);
+            return res.status(500).send('Database Error') ;
+        }
         res.render('user',{events:results , user: req.session.user});
     }) ;
 })
 
-app.get('/user/events', authMiddleware, (req, res) => {
+app.get('/user/events', authMiddleware, isUser, (req, res) => {
     const sql = `SELECT * from events WHERE date >= CURDATE() ORDER BY date ASC` ;
 
     db.query(sql, (err, results) => {
@@ -211,7 +236,7 @@ app.get('/success', authMiddleware, (req, res) => {
     res.redirect('/update') ;
 })
 
-app.get('/mybookings', authMiddleware, (req, res) => {
+app.get('/mybookings', authMiddleware, isUser, (req, res) => {
 
     const sql = `SELECT e.name as eventName, e.location, e.date, e.price, b.id, b.tickets_booked, b.booking_date 
     FROM bookings b
@@ -221,19 +246,23 @@ app.get('/mybookings', authMiddleware, (req, res) => {
     AND e.date >= CURDATE()` ;
 
     db.query(sql, [req.user.id], (err, results) => {
-        if (err) return res.status(500).send('Error fetching bookings')
+        if (err) 
+        {
+            console.log(err) ;
+            return res.status(500).send('Error fetching bookings')
+        }
         res.render('mybookings', {bookings: results})
     }) ;
 })
 
-app.get('/admin',authMiddleware, (req,res)=>{
+app.get('/admin',authMiddleware, isAdmin, (req,res)=>{
     db.query('SELECT * from events ORDER BY date ASC', (err, results) => {
         if(err) return res.status(500).send('Database Error') ;
         res.render('admin',{events:results, user: req.session.user});
     }) ;
 }) ;
 
-app.get('/admin/dashboard', authMiddleware, (req, res) => {
+app.get('/admin/dashboard', authMiddleware, isAdmin, (req, res) => {
     db.query(`SELECT 
         (SELECT COUNT(*) from events) AS totalEvents,
         (SELECT COUNT(*) from event_users WHERE role = 'user') AS totalUsers,
@@ -260,7 +289,7 @@ app.get('/admin/dashboard', authMiddleware, (req, res) => {
     });
 }) ;
 
-app.get('/admin/events', authMiddleware, (req, res) => {
+app.get('/admin/events', authMiddleware, isAdmin, (req, res) => {
     const sql = `SELECT * from events WHERE date >= CURDATE() ORDER BY date ASC` ;
 
     db.query(sql, (err, results) => {
@@ -269,25 +298,25 @@ app.get('/admin/events', authMiddleware, (req, res) => {
     })
 })
 
-app.get('/addEvent', authMiddleware, (req, res) => {
+app.get('/addEvent', authMiddleware, isAdmin, (req, res) => {
     res.render('addEvent');
 })
 
-app.post('/add', authMiddleware, (req, res) => {
+app.post('/add', authMiddleware, isAdmin, (req, res) => {
     db.query('Insert into events SET ?', req.body, (err, results) => {
         if (err) return res.status(500).send('Database Error');
         res.redirect('/admin');
     }) 
 }) 
 
-app.get('/delete', authMiddleware, (req, res) => {
+app.get('/delete', authMiddleware, isAdmin, (req, res) => {
     const sql = `SELECT id, name, date, location, price FROM events ORDER BY date ASC` ;
     db.query(sql, (err, results) =>{
         if(err) return res.status(500).send('Database Error') ;
         res.render('delete', {events:results}) ;
     }) ;
 })
-app.post('/delete', authMiddleware, (req, res) => {
+app.post('/delete', authMiddleware, isAdmin, (req, res) => {
     const eventId = req.body.eventId;
     
     // if event_id exits in bookings table also then first delete from bookings table 
@@ -363,4 +392,25 @@ app.get('/update', authMiddleware, (req, res) => {
             });
         })
     }) 
+})
+
+app.get('/contact', (req, res) => {
+  res.render('contact');
+});
+
+app.post('/contact', (req, res) => {
+  const { name, email, subject, message } = req.body;
+  res.send('Thank you for contacting us!');
+});
+
+app.get('/privacy', (req, res) => {
+    res.render('privacy') ;
+})
+
+app.get('/terms', (req, res) => {
+    res.render('terms') ;
+})
+
+app.get('/faqs', (req, res) => {
+    res.render('faqs') ;
 })

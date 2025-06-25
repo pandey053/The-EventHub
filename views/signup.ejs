@@ -47,11 +47,16 @@
 
                 <div class="block">
                     <label for="role">Select Role:</label>
-                    <select id="role" name="role" style="outline: none; border: none; border-bottom: 1px solid black;"  required>
+                    <select id="role" name="role" style="outline: none; border: none; border-bottom: 1px solid black;" onchange="toggleSecretCode()" required>
                         <option value="" disabled selected></option>
                         <option value="admin">Admin</option>
                         <option value="user">User</option>
                     </select>
+                </div>
+
+                <div class="block" id="secret-code-container" style="display: none;">
+                    <label for="secretCode">Enter Admin Secret Code:</label>
+                    <input type="password" name="secretCode" id="secretCode" />
                 </div>
 
                 <div class="block">
@@ -62,3 +67,11 @@
     </div>
 </body>
 </html>
+
+<script>
+  function toggleSecretCode() {
+    const role = document.getElementById('role').value;
+    const secretContainer = document.getElementById('secret-code-container');
+    secretContainer.style.display = role === 'admin' ? 'block' : 'none';
+  }
+</script>

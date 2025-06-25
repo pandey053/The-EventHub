@@ -6,6 +6,7 @@
     <title>The EventHub</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="header">
@@ -31,8 +32,9 @@
         </div>
     </div>
     <div class="description">
-        <br><br><br><br><br><br><br>
-        <h1 class="Welcome">Welcome To The EventHub</h1>
+        <!-- <br><br><br><br><br><br><br> -->
+        <h1 class="Welcome"> Welcome back, <span style="color: #273F4F;">@<%= user.username %></span>!</h1>
+        <h1 class="Welcome">to The EventHub</h1>
         <h3 class="tagline">Your one-stop platform to explore, book, and manage events with ease.</h3>
     </div>
     <br>
@@ -61,7 +63,46 @@
     </div>
     <br>
 </body>
-<footer>
+<footer class="footer">
+  <div class="footer-container">
+    
+    <!-- Social Media Section -->
+    <div class="footer-section social-media">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/_adarsh.pandey_11?igsh=cGRuOWx2dnluajcw" class="icon-circle"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/adarsh-pandey-1a4864324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="icon-circle"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://github.com/pandey053" class="icon-circle"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-section links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/admin/events">Events</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Sign Up</a></li>
+      </ul>
+    </div>
+
+    <!-- Help & Support -->
+    <div class="footer-section help">
+      <h3>Help & Support</h3>
+      <ul>
+        <li><a href="/faqs">FAQs</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+        <li><a href="/terms">Terms & Conditions</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Bottom Text -->
+  <div class="footer-bottom">
     <p>© 2025 The EventHub | All rights reserved.</p>
+  </div>
 </footer>
+
 </html>

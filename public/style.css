@@ -106,9 +106,15 @@ h2{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .description{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
     height: 200px;
     text-align: center;
     background-color: #FFFADC;
+    
 }
 .description > * {
     /* margin-bottom: -15px; */
@@ -218,13 +224,94 @@ label{
     gap: 10px;
 }
 
-footer {
+.footer {
   background-color: #222;
+  color: #ddd;
+  padding: 40px 20px 10px;
+  font-size: 14px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+}
+
+.footer-section h3 {
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
   color: #ccc;
+  text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.footer .icons a {
+  color: #ccc;
+  font-size: 18px;
+  margin-right: 12px;
+  text-decoration: none;
+}
+
+.footer .icons a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
   text-align: center;
-  padding: 20px;
   margin-top: 20px;
-}  
+  border-top: 1px solid #444;
+  padding-top: 15px;
+  font-size: 13px;
+}
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.icon-circle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #444;
+  color: #fff;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.icon-circle:hover {
+  background-color: #fff;
+  color: #222;
+  transform: scale(1.1);
+}
 
  .main {
   display: flex;
@@ -319,13 +406,13 @@ footer {
 .edit:hover { background-color: #e0ac07; }
 
 
-footer {
+/* footer {
   background-color: #222;
   color: #ccc;
   text-align: center;
   padding: 20px;
   font-size: 14px;
-} 
+}  */
 .event-select {
   width: 100%;
   padding: 8px 10px;
