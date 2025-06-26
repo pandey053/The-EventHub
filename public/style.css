@@ -433,7 +433,6 @@ label{
 }
 @media (max-width: 768px) {
   .main1, .main2, .main3 {
-    padding: 15px;
     height: auto;
     align-items: flex-start;
   }
@@ -480,7 +479,7 @@ label{
   .a, .aa, .heading4 {
     font-size: 22px;
     text-align: center;
-    font-weight: 200;
+    font-weight: 300;
   }
 
   .c {
@@ -501,7 +500,7 @@ label{
     text-align: center;
     width: 100%;
     margin: 0;
-    font-weight: 200;
+    font-weight: 400;
     /* padding-left: 12px; */
   }
 
@@ -521,12 +520,12 @@ label{
 
   .welcome {
     font-size: 22px;
-    font-weight: 200;
+    font-weight: 400;
   }
 
   .tagline {
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 250;
   }
 
   .description > * {
