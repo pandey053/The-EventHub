@@ -433,13 +433,13 @@ label{
 }
 @media (max-width: 768px) {
   .main1, .main2, .main3 {
-    padding: 20px;
+    padding: 15px;
     height: auto;
     align-items: flex-start;
   }
 
   .form1, .form2, .form3, .form4 {
-    width: 90%;
+    width: 80%;
     padding: 20px;
     margin-top: 40px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -480,6 +480,7 @@ label{
   .a, .aa, .heading4 {
     font-size: 22px;
     text-align: center;
+    font-weight: 200;
   }
 
   .c {
@@ -500,6 +501,7 @@ label{
     text-align: center;
     width: 100%;
     margin: 0;
+    font-weight: 200;
     /* padding-left: 12px; */
   }
 
@@ -519,10 +521,12 @@ label{
 
   .welcome {
     font-size: 22px;
+    font-weight: 200;
   }
 
   .tagline {
     font-size: 16px;
+    font-weight: 200;
   }
 
   .description > * {

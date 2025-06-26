@@ -373,17 +373,54 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
 
 const crypto = require("crypto");
 
+// app.post("/verify", express.json(), (req, res) => {
+//     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+//     const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+//     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+//     const generated_signature = hmac.digest("hex");
+
+//     if (generated_signature === razorpay_signature) {
+//         res.redirect("/success");
+//     } else {
+//         res.status(400).send("Payment verification failed");
+//     }
+// });
+
+// const crypto = require("crypto");
+
 app.post("/verify", express.json(), (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+    } = req.body;
 
-    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
-    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
-    const generated_signature = hmac.digest("hex");
+    // console.log(" Verifying Payment...");
+    // console.log(" Received Order ID:", razorpay_order_id);
+    // console.log(" Received Payment ID:", razorpay_payment_id);
+    // console.log(" Received Signature:", razorpay_signature);
 
-    if (generated_signature === razorpay_signature) {
-        res.redirect("/success");
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !secret) {
+        console.error("Missing required data for verification.");
+        return res.status(400).send("Missing payment details.");
+    }
+
+    const generated_signature = crypto
+        .createHmac("sha256", secret)
+        .update(razorpay_order_id + "|" + razorpay_payment_id)
+        .digest("hex");
+
+    // console.log("Generated Signature:", generated_signature);
+
+        if (generated_signature === razorpay_signature) {
+        console.log("Payment verified successfully.");
+        return res.status(200).json({ success: true }); 
     } else {
-        res.status(400).send("Payment verification failed");
+        console.error("Signature mismatch. Verification failed.");
+        return res.status(400).json({ success: false, message: "Invalid signature" });
     }
 });
 

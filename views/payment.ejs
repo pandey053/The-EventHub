@@ -96,25 +96,32 @@
 
 
       handler: function (response) {
-        fetch("/verify", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(response),
-        })
-        .then((res) => {
-          if (res.ok) {
-            window.location.href = "/success";
-          } else {
-            alert("Payment verification failed. Please contact support.");
-          }
-        })
-        .catch((err) => {
-          console.error("Verification error:", err);
-          alert("Something went wrong. Try again later.");
-        });
-      },
+  fetch("/verify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature,
+    }),
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.success) {
+      window.location.href = "/success"; 
+    } else {
+      alert("Payment verification failed. Contact support.");
+    }
+  })
+  .catch((err) => {
+    console.error("Network error:", err);
+    alert("Something went wrong. Please try again.");
+  });
+}
+,
+
       prefill: {
         name: "<%= user.username %>",
         email: "", // You can pass email if stored

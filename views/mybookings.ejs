@@ -66,6 +66,46 @@
       color: #008080;
     }
     
+
+    @media (max-width: 768px) {
+  table {
+    border: 0;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    display: block;
+    margin-bottom: 15px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    padding: 13px;
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #444;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+}
+
+    
   </style>
 </head>
 <body>

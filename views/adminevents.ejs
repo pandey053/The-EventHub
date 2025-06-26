@@ -37,18 +37,18 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .name{
-        width: 50%;
+        width: 40%;
         font-weight: 220;
         /* color: #2c3e50; */
         color: black;
-        margin-left: 120px;
     }
     .btns{
-        width: 50%;
+        width: 40%;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
+        gap: 5%;
     }
     .btn{
         margin-right: 20px;
@@ -58,10 +58,10 @@
         border-radius: 0.5rem;
         font-size : 15px;
         transition: all 0.3s ease;
-        width: 180px;
+        width: 27%;
     }
     .home, .lg{
-        width: 100px;
+        width: 12%;
     }
     .btn:hover{
         background-color: black;
@@ -192,6 +192,30 @@
   transform: scale(1.1);
 }
 
+@media (max-width: 768px) {
+   .header{
+      width: 100%;
+      padding-bottom: 1%;
+      height: auto;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+   }
+   .name{
+      width: 90%;
+      text-align: center;
+   }
+   .btns{
+      justify-content: space-evenly;
+      width: 90%;
+   }
+   .btn{
+      width: 35%;
+   }
+   .home, .lg{
+      width: 25%;
+   }
+}
 </style>
 <body>
     <div class="header">
