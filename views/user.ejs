@@ -7,39 +7,55 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <div class="header">
-        <div class="logo">
-            <h2 class="name">The EventHub</h2>
+    <header class="header">
+            <ul>
+              <li class="logo">
+                  The EventHub
+              </li>
+              <li class="login hide">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                  </svg>
+                   <% if(user) { %>
+                    <span class="text"> <%= user.username %> </span>
+                  <%}%>
+              </li>
+              <li class="hide"> <button style="width: 70px;"class="btn" onclick="window.location.href='/'">Home</button></li>
+              <li class="hide"> <button style="width: 70px;" class="btn" onclick="window.location.href='/user/events'">Events</button></li>
+              <li class="hide"> <button style="width: 73px;" class="btn" onclick="window.location.href='/'" >Log out</button> </li>
+              <li class="menu-button" onclick="openSidebar()">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#000000" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>   
+              </li>
+            </ul>
+      </header>
+        <div class="sidebar">
+            <ul>
+                <li class="close" onclick="closeSidebar()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </li>
+                <li class=""><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+              </svg></li>
+                <li class="" onclick="window.location.href='/'">Home</li>
+                <li onclick="window.location.href='/user/events'">Events</li>
+                <li onclick="window.location.href='/'">logout</li>
+            </ul>
         </div>
-        <div class="btns">
-            <div class="login">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-            </svg>
-            <% if(user){ %>
-            <span class="text"><%= user.username %></span>
-            <% } %>
 
-            </div>
-            <button class="btn home" onclick="window.location.href='/'">Home</button>
-            <button class="btn events" onclick="window.location.href='/user/events'">Events</button>
-            <button class="btn mybookings" onclick="window.location.href='/mybookings'">My Bookings</button>
-            <button class="btn lg" onclick="window.location.href='/logout'">Log out</button>
-        </div>
-    </div>
     <div class="description">
-        <!-- <br><br><br><br> -->
         <h1 class="Welcome"> Welcome back, <span style="color: #273F4F;">@<%= user.username %></span>!</h1>
         <h1 class="Welcome">to The EventHub</h1>
         <h3 class="tagline">Your one-stop platform to explore, book, and manage events with ease.</h3>
-        <!-- <h1 class="Welcome">
-            Welcome back, <span style="color: rgb(93, 93, 235);">@<%= user.username %></span> to <strong>The EventHub</strong>
-        </h1>
-        <h3 class="tagline">Your one-stop platform to explore, book, and manage events with ease.</h3> -->
-
     </div>
     <br>
     <div class="main">

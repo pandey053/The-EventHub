@@ -14,3 +14,14 @@ window.addEventListener('DOMContentLoaded', ()=>{
         des.classList.add("visible") ;
     },500) ;
 })
+
+
+function openSidebar() {
+    const nav = document.querySelector('.sidebar') ;
+    nav.style.display = 'block' ;
+}
+
+function closeSidebar() {
+    const nav = document.querySelector('.sidebar') ;
+    nav.style.display = 'none' ;
+}
