@@ -542,10 +542,13 @@ label{
 
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
-    height: auto;
-    padding: 10px 0;
-    align-items: flex-start;
+    height: 55px;
+    /* padding: auto 0; */
+    /* align-items: center; */
+  }
+
+  header li{
+    padding : 13px 20px
   }
 
   .logo {
