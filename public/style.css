@@ -52,13 +52,6 @@ header ul{
 header li{
   padding: 20px 20px;
 }
-header a{
-  color: black;
-  width: 100%;
-  text-decoration: none;
-  justify-content: center;
-}
-
 header li:nth-child(1){
   margin-right: auto;
 }
@@ -145,7 +138,7 @@ header li:nth-child(1){
 }
 .logo{
     /* font-style: italic;  */
-     font-weight: bold;
+    font-weight: bold;
     color: #273F4F;
     font-size: 30px;
     font-weight: 400;
@@ -165,7 +158,6 @@ header li:nth-child(1){
     height: 200px;
     text-align: center;
     background-color: #FFFADC;
-    
 }
 .description > * {
     opacity: 0;
