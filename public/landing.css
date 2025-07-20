@@ -38,7 +38,7 @@ header p {
   gap: 15px;
 }
 
-.actions .btn {
+.actions .btn{
   background-color: #34A853;
   background-color: white ;
   color: black;
@@ -256,12 +256,15 @@ header p {
   }
 
   .event-card {
-    width: 80%;
+    width: 70%;
   }
 
   .actions .btn {
     padding: 10px 20px;
     font-size: 15px;
+  }
+  .footer-bottom {
+    font-size: 32px;
   }
 }
 

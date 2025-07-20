@@ -516,7 +516,7 @@ label{
   .form1, .form2, .form3, .form4 {
     width: 80%;
     padding: 20px;
-    margin-top: 40px;
+    margin-top: 0px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
 
