@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     const des = document.querySelector(".description") ;
     setTimeout(()=>{
         des.classList.add("visible") ;
-    },500) ;
+    }) ;
 })
 
 
@@ -25,3 +25,19 @@ function closeSidebar() {
     const nav = document.querySelector('.sidebar') ;
     nav.style.display = 'none' ;
 }
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".Eventcard");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  });
+
+  cards.forEach(card => observer.observe(card));
+});

@@ -5,11 +5,24 @@
   <title>The EventHub</title>
   <link rel="stylesheet" href="landing.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- for google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 
 </head>
 <body>
   <header>
-    <h1>The EventHub</h1>
+    <h1 class="title">The EventHub</h1>
     <p>Your gateway to unforgettable experiences.</p>
     <div class="actions">
       <a href="/login" class="btn">Login</a>
@@ -17,20 +30,112 @@
     </div>
   </header>
 
-  <section class="events-preview">
-    <h2>Upcoming Events</h2>
-    <div class="event-list">
-      <div class="event-card">
-        <h3>Music Fest 2025</h3>
-        <p>New Delhi - July 10, 2025</p>
-      </div>
-      <div class="event-card">
-        <h3>Tech Conference</h3>
-        <p>Bangalore - August 22, 2025</p>
-      </div>
-    </div>
-  </section>
+  <h2 style="text-align: center; color: white; font-size: 38px; font-weight: 500; padding-top: 10px;">Featured Events</h2>
 
+<section class="featured-tagline">
+  <h2>Spotlight on the Best: Don’t Miss These Events!</h2>
+  <p>Explore our top curated events and make unforgettable memories today.</p>
+</section>
+
+
+  <div class="events-preview swiper">
+    <div class="event-list swiper-wrapper">
+      
+        <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://media.istockphoto.com/id/1806011581/photo/overjoyed-happy-young-people-dancing-jumping-and-singing-during-concert-of-favorite-group.jpg?s=612x612&w=0&k=20&c=cMFdhX403-yKneupEN-VWSfFdy6UWf1H0zqo6QBChP4=" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+            Music Fest 2025
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+
+        <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://images.stockcake.com/public/a/7/a/a7acb612-27c9-469a-bb4f-92695cc7d178_large/tech-conference-presentation-stockcake.jpg" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+            Tech Conference
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+           <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010125.jpg?semt=ais_hybrid&w=740" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+            Live Coding Hackathon
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+           <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiHKcBvsRQ8XpR5njL9LRYvRir0AUPVew9wQ&s" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+             Independence Day Celebration
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+
+        <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5JPd1lM0kkyuuHYnuLe_ozCWH6GOKwJ143Q&s" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+            Spiritual Talk
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+        <div class="event-card swiper-slide">
+          <div class="card-item">
+            <a href="#" class="card-link">
+              <img src="https://blackpebbles.co.uk/wp-content/uploads/2024/04/04tech13.jpg" alt="" class="image">
+            </a>
+          </div>
+          <div class="card-item" style="font-size: 20px;">
+            Startup Pitch Night
+          </div>
+          <div class="card-item">
+             <button class="card-btn">Explore More</button>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="swiper-pagination"></div>
+      
+      <!-- If we need navigation buttons -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+<br><br>
   <footer class="footer">
   <div class="footer-container">
     
@@ -67,6 +172,7 @@
     </div>
   </div>
 
+
   <!-- Bottom Text -->
   <div class="footer-bottom">
     <p>© 2025 The EventHub | All rights reserved.</p>
@@ -74,4 +180,60 @@
 </footer>
 
 </body>
+
+<% if(logoutSuccess) { %>
+  <script>
+      const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+  });
+      Toast.fire({
+        icon: "success",
+        title: "Logged out successfully",
+      });
+  </script>
+<%}%>
+
+<script>
+    new Swiper('.swiper', {
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+    slidesPerView: 1,
+
+    // If we need pagination
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+
+    // Navigation arrows
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    breakpoints :{
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 10,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 20,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      }
+    }
+  });
+</script>
 </html>

@@ -43,13 +43,14 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-
 app.listen(port, ()=>{
     console.log(`Server is running on port ${port}`);
 })
 
 app.get('/', (req, res) => {
-  res.render('landing'); 
+  const logoutSuccess = req.cookies.logoutSuccess;
+  res.clearCookie('logoutSuccess'); 
+  res.render('landing', {logoutSuccess}); 
 });
 
 app.get('/login', (req, res) => {
@@ -115,7 +116,7 @@ app.post('/login', async (req, res) => {
             const token = Jwt.sign({ id: user.id, username: user.username, role: user.role }, secret_jwt, { expiresIn: '1h' });
 
             res.cookie('token', token, { httpOnly: true });
-
+            req.session.loginSuccess = true;
             if (user.role === 'admin') 
             {
                 res.redirect('/admin');
@@ -173,10 +174,8 @@ function isUser(req, res, next) {
   }
 }
 
-module.exports = { isAdmin, isUser };
-
 app.get('/logout', (req, res) => {
-
+    res.cookie('logoutSuccess', true, { httpOnly: true });
     req.session.destroy(err => {
         if (err) {
             console.error('Logout Error:', err);
@@ -188,13 +187,15 @@ app.get('/logout', (req, res) => {
 });
 
 app.get("/user", authMiddleware, isUser, (req, res) => {
+    const loginSuccess = req.session.loginSuccess;
+    delete req.session.loginSuccess;
     db.query('SELECT * from events ORDER BY date ASC', (err, results) => {
         if(err) 
         {
             console.log(err);
             return res.status(500).send('Database Error') ;
         }
-        res.render('user',{events:results , user: req.session.user});
+        res.render('user',{loginSuccess, events:results , user: req.session.user});
     }) ;
 })
 
@@ -304,7 +305,11 @@ app.get('/addEvent', authMiddleware, isAdmin, (req, res) => {
 
 app.post('/add', authMiddleware, isAdmin, (req, res) => {
     db.query('Insert into events SET ?', req.body, (err, results) => {
-        if (err) return res.status(500).send('Database Error');
+        if (err) 
+        {
+            console.log(err) ;
+            return res.status(500).send('Database Error');
+        }
         res.redirect('/admin');
     }) 
 }) 
@@ -371,24 +376,7 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
 });
 
 
-const crypto = require("crypto");
-
-// app.post("/verify", express.json(), (req, res) => {
-//     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-//     const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
-//     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
-//     const generated_signature = hmac.digest("hex");
-
-//     if (generated_signature === razorpay_signature) {
-//         res.redirect("/success");
-//     } else {
-//         res.status(400).send("Payment verification failed");
-//     }
-// });
-
-// const crypto = require("crypto");
-
+const crypto = require("crypto") ;
 app.post("/verify", express.json(), (req, res) => {
     const {
         razorpay_order_id,

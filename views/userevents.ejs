@@ -6,64 +6,94 @@
     <title>Upcoming Events</title>
     <script src="/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- for google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
 </head>
 <style>
-    
-    html, body{
-        background-color: whitesmoke;
-        font-family: "Inter", sans-serif;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        overflow-x: hidden;
-        /* font-size: 15px; */
+    *{
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
     }
-    .header{
+    body{
+        background-color: whitesmoke;
+        min-height: 100vh;
         width: 100%;
-        height: 60px;
+    }
+    header{
+        width: 100%;
         background-color: #FFFADC;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
+        background-color: rgb(0, 60, 61);
         position: sticky;
         top: 0;
         z-index: 1000;
     }
-    .scrolled{
-        transition: color 0.3s ease;
-        background-color: white ;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .name{
-        width: 40%;
-        font-weight: 220;
-        color: black;
-    }
-    .btns{
-        width: 40%;
+      header ul{
+        width: 100%;
+        list-style: none;
         display: flex;
-        flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        gap: 5%;
     }
-    .btn{
-        margin-right: 20px;
-        background: transparent;
-        border: none;
-        height: 32px;
-        border-radius: 0.5rem;
-        font-size : 15px;
-        transition: all 0.3s ease;
-        width: 27% ;
+      header li{
+        padding: 20px 15px;
     }
-      .home, .lg{
-          width: 12%;
-      }
+      header li:nth-child(1){
+        margin-right: auto;
+    }
+
+    .sidebar{
+    width: 250px;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.014);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    display: none;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    padding: 20px 30px;
+    transition: all 0.3s ease;
+
+}
+.sidebar li{
+   list-style-type: none;
+   padding: 10px 0;
+}
+
+.menu-button{
+  display: none;
+}
+
+    .title {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-size: 32px;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+}
+.btn{
+    margin-right: 20px;
+    background: transparent;
+    border: none;
+    height: 32px;
+    border-radius: 0.5rem;
+    font-size : 16px;
+    transition: all 0.3s ease;
+    width: 27% ;
+    color: white;
+    } 
     .btn:hover{
         background-color: black;
+        border: 1px solid white;
         color: white;
     }
     .event_box {
@@ -72,26 +102,40 @@
         gap: 20px;
         padding: 30px;
         justify-content: center;
+        background-color: #f5f5f5;
     }
-
+    .event_img{
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
     .card {
         background-color: white;
-        border-radius: 12px;
+        border-radius: 16px;
         padding: 20px;
-        width: 280px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        text-align: center;
-        font-size: 15px;
-        /* font-family: "Inter", sans-serif; */
+        width: 100%;
+        max-width: 320px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+     .card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #333;
+}
 
-    .card h3 {
-        margin-bottom: 10px;
-    }
+.card p {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: #555;
+}
 
     .book {
+        margin-top: 10px;
         background-color: #007BFF;
-        /* background-color: #273F4F; */
+        /* background-color: rgb(0, 60, 61);; */
         color: white;
         padding: 10px 18px;
         border: none;
@@ -104,6 +148,7 @@
     }
     .footer {
     background-color: #222;
+    background-color: rgb(0, 60, 61);
     color: #ddd;
     padding: 40px 20px 10px;
     font-size: 14px;
@@ -124,6 +169,7 @@
 
 .footer-section h3 {
   color: #fff;
+  color: orange;
   margin-bottom: 10px;
   font-size: 16px;
 }
@@ -192,47 +238,80 @@
 }
 
 @media (max-width: 768px) {
-   .header{
-      width: 100%;
-      padding-bottom: 1%;
-      height: auto;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+.header {
+  height: 55px;
+}
+
+header li{
+  padding : 13px 20px
+}
+
+.title {
+  font-size: 28px;
+}
+.hide{
+     display: none;
    }
-   .name{
-      width: 90%;
-      text-align: center;
-   }
-   .btns{
-      justify-content: space-evenly;
-      width: 90%;
-   }
-   .btn{
-      width: 35%;
-   }
-   .home, .lg{
-      width: 25%;
-   }
+  .menu-button{
+    display: block;
+  }
+/* .name{
+  width: 90%;
+  text-align: center;
+} */
+/* .btns{
+  justify-content: space-evenly;
+  width: 90%;
+} */
+/* .btn{
+  width: 35%;
+} */
+/* .home, .lg{
+  width: 25%;
+} */
 }
 </style>
 <body>
-    <div class="header">
-        <h2 class="name">Upcoming Events</h2>
-        <div class="btns">
-            <button class="btn home" onclick="window.location.href='/'">Home</button>
-            <button class="btn " onclick="window.location.href='/user'">Back to Dashboard</button>
-            <button class="btn lg" onclick="window.location.href='/Logout'">Log out</button>
-        </div>
+    <header class="header">
+        <ul>
+          <li class="title"> The EventHub</li>
+          <li class="hide"><button class="btn" style="width: 70px;" onclick="window.location.href='/'">Home</button></li>
+          <li class="hide"><button class="btn" style="width: 160px;" onclick="window.location.href='/user'">Back to Dashboard</button></li>
+          <li class="hide"><button class="btn" style="width: 75px;" onclick="window.location.href='/logout'">Log out</button></li>
+          <li class="menu-button" onclick="openSidebar()">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#fff" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>   
+          </li>
+        </ul>
+    </header>
+
+    <div class="sidebar">
+      <ul>
+          <li class="close" onclick="closeSidebar()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#fff" class="bi bi-x-lg" viewBox="0 0 16 16" >
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                </svg>
+          </li>
+          <li onclick="window,location.href='/'" style="font-weight: 600;">Home</li>
+          <li onclick="window.location.href='/user'" style="font-weight: 600;">Back to Dashboard</li>
+          <li onclick="window.location.href='/logout'" style="font-weight: 600;">Log out</li>
+      </ul>
     </div>
 
+
+
+
+
+    <h2 style="text-align: center; margin-top: 40px; font-size: 26px; color: #333; font-weight: 240;">Upcoming Events</h2>
     <div class="event_box">
         <% if(events.length == 0) { %>
-           <p style:"text-align: center;"> No Upcoming Events Available</p>
+           <p style="text-align: center;"> No Upcoming Events Available</p>
         <% } %>
 
         <% for(event of events) { %>
            <div class="card">
+                <img src="<%= event.image_url %>" alt="Event Image" class="event_img">
                 <h3><%=event.name %></h3><br>
                 <p>Date: <%= event.date.toISOString().split('T')[0] %></p>
                 <p>Location: <%= event.location %></p><br>
