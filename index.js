@@ -28,7 +28,7 @@ app.use(session({
 }));
 // console.log("Session Secret:", process.env.SESSION_SECRET);
 const secret_jwt = process.env.SECRET_JWT;
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 10000;
 const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
 
 const db = mysql.createConnection({
@@ -85,7 +85,6 @@ app.post('/signup', async (req, res) => {
 
     db.query('Insert into event_users(username, email, password, role) values (?, ?, ?, ?)', [username, email, hashedPassword, role], (err, results) => {
         if(err) return res.status(500).send('Signup failed') ;
-        // res.send('User registered successfully') ;
         res.redirect('/login') ;
     });
 });

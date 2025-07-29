@@ -9,7 +9,6 @@ body {
 header {
   background-color: #273F4F;
   background-color: rgb(0,60,61);
-  /* background-color: black; */
   color: white;
   text-align: center;
   padding: 50px 20px;
@@ -51,12 +50,10 @@ header p {
 }
 
 .actions .btn:hover {
-  /* background-color: #2b8642; */
   background-color: #ccc;
 }
 
 .featured-tagline {
-  /* background: linear-gradient(to right, #eceffe, #ced6fb); */
   background-color: black;
   text-align: center;
   padding: 40px 20px;
@@ -99,7 +96,6 @@ header p {
   border-radius: 10px;
   position: relative;
   overflow: visible;
-  /* border: 1px solid black; */
 }
 
 .swiper-wrapper {
@@ -153,7 +149,6 @@ header p {
 
 .footer {
   background-color: #222;
-  /* background-color: black; */
   background-color: rgb(0,60,61);
   color: #ddd;
   padding: 40px 20px 10px;
@@ -245,36 +240,10 @@ header p {
 }
 
 
-/* Responsive Media Queries */
+
 @media (max-width: 768px) {
   header h1 {
-    font-size: 36px;
-  }
-
-  header p {
-    font-size: 18px;
-  }
-
-  .event-card {
-    width: 70%;
-  }
-
-  .actions .btn {
-    padding: 10px 20px;
-    font-size: 15px;
-  }
-  .footer-bottom {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-  header {
-    padding: 30px 15px;
-  }
-
-  header h1 {
-    font-size: 28px;
+    font-size: 30px;
   }
 
   header p {
@@ -282,7 +251,41 @@ header p {
   }
 
   .event-card {
+    width: auto;
+  }
+
+  .actions .btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-section {
     width: 100%;
+    max-width: 400px;
+  }
+
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 40px 15px;
+  }
+
+  header h1 {
+    font-size: 24px;
+  }
+
+  header p {
+    font-size: 16px;
+  }
+
+  .event-card {
+    width: auto;
   }
 
   .actions {
@@ -297,5 +300,9 @@ header p {
 
   .events-preview {
     padding: 20px 10px;
+  }
+  .swiper-button-next,
+  .swiper-button-prev{
+    display: none;
   }
 }
