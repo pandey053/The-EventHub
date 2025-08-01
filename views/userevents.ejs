@@ -315,7 +315,12 @@ header li{
                 <h3><%=event.name %></h3><br>
                 <p>Date: <%= event.date.toISOString().split('T')[0] %></p>
                 <p>Location: <%= event.location %></p><br>
-                <p>Price: <%= event.price %></p><br>
+                <p>Price: <%= event.price %></p>
+                <% if(event.available_tickets > 0) { %>
+              <p style="color: rgba(22, 117, 22, 0.856); font-size: 16px; font-weight: 550;">Available(<%=event.available_tickets%>) </p>
+            <%} else { %>
+              <p style="color: red; font-size: 16px; font-weight: 550;">Tickets Sold Out!</p>
+            <% } %>
                 <button class="book" onclick="window.location.href='/book/<%=event.id%>'">Book Now</button>
            </div>
         <% } %>

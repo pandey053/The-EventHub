@@ -1,56 +1,62 @@
-const express = require('express') ;
-const app = express() ;
-const mysql = require('mysql2') ;
-const cors = require('cors') ;
-const session = require('express-session') ;
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const cors = require('cors');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const bcrypt = require('bcryptjs') ;
+const bcrypt = require('bcryptjs');
 const Jwt = require('jsonwebtoken');
 const Razorpay = require('razorpay');
+const crypto = require("crypto");
 require('dotenv').config();
 
- 
+// MongoDB Models
+const User = require('./models/User');
+const Event = require('./models/Event');
+const Booking = require('./models/Booking');
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => {
+        console.error('❌ MongoDB connection failed:', err.message);
+        process.exit(1);
+    });
+
 app.set("view engine", "ejs");
-app.use(express.json()) ;
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')) ;
-app.use(bodyParser.urlencoded({extended : true})) ;
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
-  secret: process.env.SESSION_SECRET,      
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000  
-  }     
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
-// console.log("Session Secret:", process.env.SESSION_SECRET);
+
 const secret_jwt = process.env.SECRET_JWT;
 const port = process.env.PORT || 10000;
 const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-}) ;
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-})
+});
 
 app.get('/', (req, res) => {
-  const logoutSuccess = req.cookies.logoutSuccess;
-  res.clearCookie('logoutSuccess'); 
-  res.render('landing', {logoutSuccess}); 
+    const logoutSuccess = req.cookies.logoutSuccess;
+    res.clearCookie('logoutSuccess');
+    res.render('landing', { logoutSuccess });
 });
 
 app.get('/login', (req, res) => {
@@ -62,7 +68,8 @@ app.get('/login', (req, res) => {
         }
     }
     res.render('login.ejs');
-})
+});
+
 app.get('/signup', (req, res) => {
     if (req.session.user) {
         if (req.session.user.role === 'admin') {
@@ -72,105 +79,99 @@ app.get('/signup', (req, res) => {
         }
     }
     res.render('signup.ejs');
-})
+});
 
 app.post('/signup', async (req, res) => {
-    const {username, email, password, role, secretCode} = req.body ;
+    const { username, email, password, role, secretCode } = req.body;
 
     if (role === 'admin' && secretCode !== ADMIN_SECRET_CODE) {
-    return res.render('signup', { error: 'Invalid admin secret code' });
-  }
-    console.log('Signup Receieved', req.body) ;
+        return res.render('signup', { error: 'Invalid admin secret code' });
+    }
+    console.log('Signup Receieved', req.body);
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    db.query('Insert into event_users(username, email, password, role) values (?, ?, ?, ?)', [username, email, hashedPassword, role], (err, results) => {
-        if(err) return res.status(500).send('Signup failed') ;
-        res.redirect('/login') ;
-    });
+    try {
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            role
+        });
+        await newUser.save();
+        res.redirect('/login');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Signup failed');
+    }
 });
 
 app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    db.query('SELECT * FROM event_users WHERE username = ?', [username], async (err, results) => {
-        if (err || results.length === 0) {
+    const { username, password } = req.body;
+    try {
+        const user = await User.findOne({ username });
+
+        if (!user) {
             return res.render('login', { error: 'Invalid username or password' });
         }
 
-        const user = results[0];
-        if (!user.password) {
-            return res.status(401).send('Invalid credentials');
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.render('login.ejs', { error: 'Invalid username or password' });
         }
-        try 
-        {
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-            return res.render('login.ejs', { error: 'Invalid username or password'});
-           }
 
-            req.session.user = {
-                id: user.id,
-                username: user.username,
-                role: user.role
-            };
-            const token = Jwt.sign({ id: user.id, username: user.username, role: user.role }, secret_jwt, { expiresIn: '1h' });
+        req.session.user = {
+            id: user._id,
+            username: user.username,
+            role: user.role
+        };
+        const token = Jwt.sign({ id: user._id, username: user.username, role: user.role }, secret_jwt, { expiresIn: '1h' });
 
-            res.cookie('token', token, { httpOnly: true });
-            req.session.loginSuccess = true;
-            if (user.role === 'admin') 
-            {
-                res.redirect('/admin');
-            } 
-            else 
-            {
-                res.redirect('/user');
-            }
-
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Something went wrong');
+        res.cookie('token', token, { httpOnly: true });
+        req.session.loginSuccess = true;
+        if (user.role === 'admin') {
+            res.redirect('/admin');
+        } else {
+            res.redirect('/user');
         }
-    });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Something went wrong');
+    }
 });
 
 
 function authMiddleware(req, res, next) {
     const token = req.cookies.token;
-//   console.log(req.cookies.token) ;
-    if (!token) 
-    {
-        return res.redirect('/login') ;    
+    if (!token) {
+        return res.redirect('/login');
     }
 
-    try 
-    {
+    try {
         const decoded = Jwt.verify(token, secret_jwt);
-        // console.log("Decoded token:", decoded);
         req.user = decoded;
-        req.session.user = decoded; 
+        req.session.user = decoded;
         next();
-    } 
-    catch (err) 
-    {
+    } catch (err) {
         res.status(400).send('Invalid token');
-        res.clearCookie('token') ;
-        res.redirect('/login') ;
+        res.clearCookie('token');
+        res.redirect('/login');
     }
 }
 
 function isAdmin(req, res, next) {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    return res.status(403).send('Access denied. Admins only.');
-  }
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        return res.status(403).send('Access denied. Admins only.');
+    }
 }
 
 function isUser(req, res, next) {
-  if (req.user && req.user.role === 'user') {
-    next();
-  } else {
-    return res.status(403).send('Access denied. Users only.');
-  }
+    if (req.user && req.user.role === 'user') {
+        next();
+    } else {
+        return res.status(403).send('Access denied. Users only.');
+    }
 }
 
 app.get('/logout', (req, res) => {
@@ -180,174 +181,192 @@ app.get('/logout', (req, res) => {
             console.error('Logout Error:', err);
             return res.status(500).send('Could not log out');
         }
-    })
+    });
     res.clearCookie('token');
     res.redirect('/');
 });
 
-app.get("/user", authMiddleware, isUser, (req, res) => {
+app.get("/user", authMiddleware, isUser, async (req, res) => {
     const loginSuccess = req.session.loginSuccess;
     delete req.session.loginSuccess;
-    db.query('SELECT * from events ORDER BY date ASC', (err, results) => {
-        if(err) 
-        {
-            console.log(err);
-            return res.status(500).send('Database Error') ;
-        }
-        res.render('user',{loginSuccess, events:results , user: req.session.user});
-    }) ;
-})
+    try {
+        const events = await Event.find().sort({ date: 1 });
+        res.render('user', { loginSuccess, events, user: req.session.user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
-app.get('/user/events', authMiddleware, isUser, (req, res) => {
-    const sql = `SELECT * from events WHERE date >= CURDATE() ORDER BY date ASC` ;
-
-    db.query(sql, (err, results) => {
-        if(err) return res.status(500).send('Database Error') ;
-        res.render('userevents', {events:results});
-    })
-})
+app.get('/user/events', authMiddleware, isUser, async (req, res) => {
+    try {
+        const events = await Event.find({ date: { $gte: new Date() } }).sort({ date: 1 });
+        res.render('userevents', { events });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
 app.get('/book/:id', authMiddleware, (req, res) => {
-    const id = req.params.id ;
-    const username = req.user.username ;
-    console.log(username, id) ;
-    res.render('bookTicket', {username, id}) ;
-})
+    const id = req.params.id;
+    const username = req.user.username;
+    res.render('bookTicket', { username, id });
+});
 
-app.post('/book/:id', authMiddleware, (req, res) => {
-    const id = req.params.id ;
-    const {tickets} = req.body ;
+app.post('/book/:id', authMiddleware, async (req, res) => {
+    const id = req.params.id;
+    const { tickets } = req.body;
 
-    db.query(`SELECT available_tickets from events WHERE id = ?`, [id], (err, results) => {
-        if(err) return res.status(500).send('Event not Found') ;
-        const available = results[0].available_tickets ;
-        if(parseInt(tickets) > available) return res.status(400).send('Not enough tickets available') ;
-
-        db.query(`SELECT name, date, location, price FROM events WHERE id = ?`, [id], (err4, eventResult) => {
-            if (err4 || eventResult.length === 0) return res.status(500).send('Event fetch failed');
-
-            const price = eventResult[0].price;
-            res.redirect(`/pay/${id}?price=${price}&tickets=${tickets}`);
-        })
-    })
-})
+    try {
+        const event = await Event.findById(id);
+        if (!event) {
+            return res.status(404).send('Event not found');
+        }
+        if (parseInt(tickets) > event.available_tickets) {
+            return res.status(400).send('Not enough tickets available');
+        }
+        res.redirect(`/pay/${id}?price=${event.price}&tickets=${tickets}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
 
 app.get('/success', authMiddleware, (req, res) => {
-    res.redirect('/update') ;
-})
+    res.redirect('/update');
+});
 
-app.get('/mybookings', authMiddleware, isUser, (req, res) => {
+app.get('/mybookings', authMiddleware, isUser, async (req, res) => {
+    try {
+        const bookings = await Booking.find({ user_id: req.user.id })
+            .populate('event_id')
+            .sort({ booking_date: -1 });
 
-    const sql = `SELECT e.name as eventName, e.location, e.date, e.price, b.id, b.tickets_booked, b.booking_date 
-    FROM bookings b
-    JOIN events e 
-    ON e.id = b.event_id
-    WHERE b.user_id = ? 
-    AND e.date >= CURDATE()` ;
+        const formattedBookings = bookings.map(booking => ({
+            eventName: booking.event_id.name,
+            location: booking.event_id.location,
+            date: booking.event_id.date,
+            price: booking.event_id.price,
+            id: booking._id,
+            tickets_booked: booking.tickets_booked,
+            booking_date: booking.booking_date
+        }));
+        res.render('mybookings', { bookings: formattedBookings });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching bookings');
+    }
+});
 
-    db.query(sql, [req.user.id], (err, results) => {
-        if (err) 
-        {
-            console.log(err) ;
-            return res.status(500).send('Error fetching bookings')
-        }
-        res.render('mybookings', {bookings: results})
-    }) ;
-})
+app.get('/admin', authMiddleware, isAdmin, async (req, res) => {
+    try {
+        const events = await Event.find().sort({ date: 1 });
+        res.render('admin', { events, user: req.session.user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
-app.get('/admin',authMiddleware, isAdmin, (req,res)=>{
-    db.query('SELECT * from events ORDER BY date ASC', (err, results) => {
-        if(err) return res.status(500).send('Database Error') ;
-        res.render('admin',{events:results, user: req.session.user});
-    }) ;
-}) ;
+app.get('/admin/dashboard', authMiddleware, isAdmin, async (req, res) => {
+    try {
+        const totalEvents = await Event.countDocuments();
+        const totalUsers = await User.countDocuments({ role: 'user' });
+        const upcomingEvents = await Event.countDocuments({ date: { $gte: new Date() } });
+        const totalBookings = await Booking.countDocuments();
+        const recentEvents = await Event.find().sort({ date: -1 }).limit(5);
 
-app.get('/admin/dashboard', authMiddleware, isAdmin, (req, res) => {
-    db.query(`SELECT 
-        (SELECT COUNT(*) from events) AS totalEvents,
-        (SELECT COUNT(*) from event_users WHERE role = 'user') AS totalUsers,
-        (SELECT COUNT(*) from events WHERE date >= CURDATE()) AS upcomingEvents,
-        (SELECT COUNT(*) from bookings) AS totalBookings` , (err, results) => {
-            if (err) return res.status(500).send('Database Error');
-        
-        const data = results[0];
-        db.query('SELECT * FROM events ORDER BY date DESC LIMIT 5', (err2, recentEvents) => {
-            if (err2) return res.status(500).send('Database Error');
+        const chartData = await Booking.aggregate([
+            {
+                $group: {
+                    _id: "$event_id",
+                    bookingCount: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "events",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "eventDetails"
+                }
+            },
+            {
+                $unwind: "$eventDetails"
+            },
+            {
+                $project: {
+                    eventName: "$eventDetails.name",
+                    bookingCount: "$bookingCount"
+                }
+            },
+            {
+                $sort: { bookingCount: -1 }
+            }
+        ]);
 
-            db.query(`
-                SELECT e.name AS eventName , COUNT(b.id) AS bookingCount
-                FROM events e
-                JOIN bookings b 
-                ON e.id = b.event_id
-                GROUP BY e.id
-                ORDER BY bookingCount DESC`, (err3, chartData) => {
-                    if(err3) return res.status(500).send('Chart data Error');
-                    // console.log(chartData) ;
-                    res.render('dashboard', { data, recentEvents, chartData });
-                }) ;
-        }) ;
-    });
-}) ;
+        const data = { totalEvents, totalUsers, upcomingEvents, totalBookings };
+        res.render('dashboard', { data, recentEvents, chartData });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
-app.get('/admin/events', authMiddleware, isAdmin, (req, res) => {
-    const sql = `SELECT * from events WHERE date >= CURDATE() ORDER BY date ASC` ;
-
-    db.query(sql, (err, results) => {
-        if(err) return res.status(500).send('Database Error') ;
-        res.render('adminevents', {events:results});
-    })
-})
+app.get('/admin/events', authMiddleware, isAdmin, async (req, res) => {
+    try {
+        const events = await Event.find({ date: { $gte: new Date() } }).sort({ date: 1 });
+        res.render('adminevents', { events });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
 app.get('/addEvent', authMiddleware, isAdmin, (req, res) => {
     res.render('addEvent');
-})
+});
 
-app.post('/add', authMiddleware, isAdmin, (req, res) => {
-    db.query('Insert into events SET ?', req.body, (err, results) => {
-        if (err) 
-        {
-            console.log(err) ;
-            return res.status(500).send('Database Error');
-        }
+app.post('/add', authMiddleware, isAdmin, async (req, res) => {
+    try {
+        const newEvent = new Event(req.body);
+        await newEvent.save();
         res.redirect('/admin');
-    }) 
-}) 
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
 
-app.get('/delete', authMiddleware, isAdmin, (req, res) => {
-    const sql = `SELECT id, name, date, location, price FROM events ORDER BY date ASC` ;
-    db.query(sql, (err, results) =>{
-        if(err) return res.status(500).send('Database Error') ;
-        res.render('delete', {events:results}) ;
-    }) ;
-})
-app.post('/delete', authMiddleware, isAdmin, (req, res) => {
+app.get('/delete', authMiddleware, isAdmin, async (req, res) => {
+    try {
+        const events = await Event.find().sort({ date: 1 });
+        res.render('delete', { events });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error');
+    }
+});
+
+app.post('/delete', authMiddleware, isAdmin, async (req, res) => {
     const eventId = req.body.eventId;
-    
-    // if event_id exits in bookings table also then first delete from bookings table 
-    // then from events table to maintain refrential integrity //
-    db.query('DELETE FROM bookings WHERE event_id = ?', [eventId], (err1, result1) => {
-        if (err1) {
-            console.error(err1);
-            return res.status(500).send('Failed to delete bookings');
-        }
+    try {
+        await Booking.deleteMany({ event_id: eventId });
+        await Event.findByIdAndDelete(eventId);
+        res.redirect('/admin');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Failed to delete event');
+    }
+});
 
-        db.query('DELETE FROM events WHERE id = ?', [eventId], (err2, result2) => {
-            if (err2) {
-                console.error(err2);
-                return res.status(500).send('Failed to delete event');
-            }
-
-            res.redirect('/admin');
-        });
-    });
-})
-
-app.get('/pay/:eventId', authMiddleware, (req, res) => {
+app.get('/pay/:eventId', authMiddleware, async (req, res) => {
     const { price, tickets } = req.query;
-    const eventId = req.params.eventId ;
+    const eventId = req.params.eventId;
     const user = req.session.user;
 
-    const amount = price * parseInt(tickets) * 100 ;
+    const amount = price * parseInt(tickets) * 100;
     const currency = "INR";
 
     const options = {
@@ -357,7 +376,10 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
     };
 
     razorpay.orders.create(options, (err, order) => {
-        if (err) return res.status(500).send("Order creation failed");
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Order creation failed");
+        }
 
         req.session.pendingBooking = {
             userId: user.id,
@@ -374,19 +396,12 @@ app.get('/pay/:eventId', authMiddleware, (req, res) => {
     });
 });
 
-
-const crypto = require("crypto") ;
 app.post("/verify", express.json(), (req, res) => {
     const {
         razorpay_order_id,
         razorpay_payment_id,
         razorpay_signature
     } = req.body;
-
-    // console.log(" Verifying Payment...");
-    // console.log(" Received Order ID:", razorpay_order_id);
-    // console.log(" Received Payment ID:", razorpay_payment_id);
-    // console.log(" Received Signature:", razorpay_signature);
 
     const secret = process.env.RAZORPAY_KEY_SECRET;
 
@@ -400,65 +415,70 @@ app.post("/verify", express.json(), (req, res) => {
         .update(razorpay_order_id + "|" + razorpay_payment_id)
         .digest("hex");
 
-    // console.log("Generated Signature:", generated_signature);
-
-        if (generated_signature === razorpay_signature) {
+    if (generated_signature === razorpay_signature) {
         console.log("Payment verified successfully.");
-        return res.status(200).json({ success: true }); 
+        return res.status(200).json({ success: true });
     } else {
         console.error("Signature mismatch. Verification failed.");
         return res.status(400).json({ success: false, message: "Invalid signature" });
     }
 });
 
-
-app.get('/update', authMiddleware, (req, res) => {
+app.get('/update', authMiddleware, async (req, res) => {
     const booking = req.session.pendingBooking;
+    if (!booking) {
+        return res.redirect('/user');
+    }
 
-    const {userId, eventId, tickets} = booking ;
-    const sql = `SELECT available_tickets from events where id = ?` ;
-    db.query(sql, [eventId], (err,result) => {
-        if(err) return res.status(500).send("Event fetch failed");
-        const available = result[0].available_tickets ;
-        const remaining = available - parseInt(tickets) ;
+    const { userId, eventId, tickets } = booking;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).send("Event not found");
+        }
 
-        db.query(`Update events set available_tickets = ? WHERE id = ?`, [remaining, eventId], (err1, results) => {
-           if(err1) return res.status(500).send("Failed to update tickets");
+        const remaining = event.available_tickets - parseInt(tickets);
+        if (remaining < 0) {
+            return res.status(400).send("Not enough tickets available");
+        }
 
-           db.query('INSERT INTO bookings (user_id, event_id, tickets_booked, booking_date) VALUES (?, ?, ?, NOW())',
-                [userId, eventId, tickets], (err3) => {
-                    if (err3) return res.status(500).send("Booking insert failed");
+        await Event.findByIdAndUpdate(eventId, { available_tickets: remaining });
 
-                    delete req.session.pendingBooking;
-                    
-                    db.query(`SELECT * FROM events WHERE id = ?`, [eventId], (err4, result) => {
-                        if (err4) return res.status(500).send("Event fetch failed");
-                        res.render('confirmation', {event: result[0], userId, tickets});
-                })
-            });
-        })
-    }) 
-})
+        const newBooking = new Booking({
+            user_id: userId,
+            event_id: eventId,
+            tickets_booked: tickets,
+            booking_date: new Date()
+        });
+        await newBooking.save();
 
+        delete req.session.pendingBooking;
 
+        const updatedEvent = await Event.findById(eventId);
+        res.render('confirmation', { event: updatedEvent, userId, tickets });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to complete booking");
+    }
+});
 
 app.get('/contact', (req, res) => {
-  res.render('contact');
+    res.render('contact');
 });
 
 app.post('/contact', (req, res) => {
-  const { name, email, subject, message } = req.body;
-  res.send('Thank you for contacting us!');
+    const { name, email, subject, message } = req.body;
+    res.send('Thank you for contacting us!');
 });
 
 app.get('/privacy', (req, res) => {
-    res.render('privacy') ;
-})
+    res.render('privacy');
+});
 
 app.get('/terms', (req, res) => {
-    res.render('terms') ;
-})
+    res.render('terms');
+});
 
 app.get('/faqs', (req, res) => {
-    res.render('faqs') ;
-})
+    res.render('faqs');
+});

@@ -75,7 +75,12 @@
             <h3> <%= event.name %> </h3><br>
             <p>Date: <%= event.date.toISOString().split('T')[0] %> </p>
             <p>Location: <%= event.location %> </p><br>
-            <p>Price(including GST): Rs <%= event.price %> </p><br>
+            <p>Price(including GST): Rs <%= event.price %> </p>
+            <% if(event.available_tickets > 0) { %>
+              <p style="color: rgba(22, 117, 22, 0.856); font-size: 16px; font-weight: 550;">Available(<%=event.available_tickets%>) </p>
+            <%} else { %>
+              <p style="color: red; font-size: 16px; font-weight: 550;">Tickets Sold Out!</p>
+            <% } %>
             <form action="/book/<%=event.id%>" method="get">
                 <button class="book">Book Now</button>
             </form>
