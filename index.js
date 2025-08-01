@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -10,7 +11,7 @@ const bcrypt = require('bcryptjs');
 const Jwt = require('jsonwebtoken');
 const Razorpay = require('razorpay');
 const crypto = require("crypto");
-require('dotenv').config();
+
 
 // MongoDB Models
 const User = require('./models/User');
@@ -18,7 +19,10 @@ const Event = require('./models/Event');
 const Booking = require('./models/Booking');
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch(err => {
         console.error('❌ MongoDB connection failed:', err.message);
