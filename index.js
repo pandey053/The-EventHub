@@ -45,7 +45,7 @@ app.use(session({
 }));
 
 const secret_jwt = process.env.SECRET_JWT;
-const port = process.env.PORT || 10000;
+const port = process.env.PORT ;
 const ADMIN_SECRET_CODE = process.env.ADMIN_SECRET_CODE;
 
 const razorpay = new Razorpay({
